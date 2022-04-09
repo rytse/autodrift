@@ -1,28 +1,31 @@
 import numpy as np
 
 # Car general parameters
-M = 1.0  # mass
+M = 1.239e3
 G = 9.81
-L_F = 1.0
-L_R = 1.0
-E_SP = 1.0
-R = 1.0
-I_ZZ = 1.0
-C_W = 1.0
-RHO = 1.0
-A = 1.0
-I_T = 1.0
-I_G_U = 1.0
-
-# Car slip parameters
-B_F = 1.0
-B_R = 1.0
-C_F = 1.0
-C_R = 1.0
-D_F = 1.0
-D_R = 1.0
-E_F = 1.0
-E_R = 1.0
+L_F = 1.19016
+L_R = 1.37484
+E_SP = 1.0  # has no effect
+R = 0.302
+I_ZZ = 1.752e3
+C_W = 0.3
+RHO = 1.249512
+A = 1.4378946874
+I_T = 3.91
+I_G_U = 1.65  # this is an average, it changes every time you shift
+I_G_U_1 = 3.09
+I_G_U_2 = 2.002
+I_G_U_3 = 1.33
+I_G_U_4 = 1.0
+I_G_U_5 = 0.805
+B_F = 1.096e1
+B_R = 1.267e1
+C_F = 1.3
+C_R = 1.3
+D_F = 4.5604e3
+D_R = 3.94781e3
+E_F = -0.5
+E_R = -0.5
 
 # Dummy function for looking up track curvature
 def track_curvature(sigma):
@@ -134,8 +137,8 @@ def step_physics(state, ctrl, track_curv):
     )
 
     # Pack derivatives
-    d_state = np.array([d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t])  # note no d_sigma
+    d_state = np.array(
+        [d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t]
+    )  # note no d_sigma
 
     return d_state
-
-def ode_step
