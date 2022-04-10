@@ -151,8 +151,9 @@ def step_physics(state, ctrl, track_curv, gear):
     )
 
     # Pack derivatives
+    d_sigma = torch.tensor(1.0)
     d_state = torch.stack(
-        [d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t], dim=0
+        [d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t, d_sigma], dim=0
     )  # note no d_sigma
 
     return d_state
@@ -172,7 +173,7 @@ if __name__ == "__main__":
 
     # bs = boring_step(test_state, test_action, 3.0, 2)
     bs = step_physics(test_state, test_action, 0.2, 2)
-    J_f_x = torch.autograd.grad(
+    J_f_x_v = torch.autograd.grad(
         bs,
         test_state,
         grad_outputs=torch.ones_like(bs),
@@ -180,7 +181,7 @@ if __name__ == "__main__":
         retain_graph=True,
         allow_unused=True,
     )
-    J_f_u = torch.autograd.grad(
+    J_f_u_v = torch.autograd.grad(
         bs,
         test_action,
         grad_outputs=torch.ones_like(bs),
@@ -188,6 +189,22 @@ if __name__ == "__main__":
         retain_graph=True,
         allow_unused=True,
     )
+
+    J_f_x = torch.autograd.functional.jacobian(
+        lambda state: step_physics(state, zero_action, 0.2, 2),
+        test_state,
+        create_graph=True,
+    )
+    J_f_u = torch.autograd.functional.jacobian(
+        lambda action: step_physics(test_state, action, 0.2, 2),
+        test_action,
+        create_graph=True,
+    )
+
+    print("bs.shape")
+    print(bs.shape)
+    print("test_state.shape")
+    print(test_state.shape)
     print("J_f_x")
     print(J_f_x)
     print("J_f_u")
