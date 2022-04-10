@@ -64,7 +64,6 @@ def step_physics(state, ctrl, track_curv, gear):
     psi = state[4]
     w_z = state[5]
     t = state[6]
-    sigma = state[7]
 
     # Unpack control
     w_delta = ctrl[0]
@@ -151,9 +150,8 @@ def step_physics(state, ctrl, track_curv, gear):
     )
 
     # Pack derivatives
-    d_sigma = torch.tensor(1.0)
     d_state = torch.stack(
-        [d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t, d_sigma], dim=0
+        [d_d, d_v, d_delta, d_beta, d_psi, d_w_z, d_t], dim=0
     )  # note no d_sigma
 
     return d_state
